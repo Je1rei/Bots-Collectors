@@ -38,11 +38,6 @@ public class Spawner<T> : MonoBehaviour where T : MonoBehaviour
             _pool.Get();
     }
 
-    public virtual void GetObject(T obj)
-    {
-        _pool.Get(out obj);
-    }
-
     public void ReleasePool(T obj)
     {
         _pool.Release(obj);
