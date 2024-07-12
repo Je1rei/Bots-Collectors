@@ -2,16 +2,22 @@
 using System.Collections;
 using UnityEngine;
 
-public class UnitMovement : MonoBehaviour
+public class Mover : MonoBehaviour
 {
     [SerializeField] private Unit _unit;
     [SerializeField] private float _speed;
-    private float _overlapDistance = 0.1f;
+    private float _overlapDistance = 0.5f;
 
     private Transform _currentTarget;
     private Coroutine _currentCoroutine;
 
     public Transform SetCurrentTarget(Transform target) => _currentTarget = target;
+    public bool IsWalk { get; private set; }
+
+    private void Awake()
+    {
+        IsWalk = false;
+    }
 
     public void SetTarget(Transform target)
     {
@@ -23,7 +29,7 @@ public class UnitMovement : MonoBehaviour
             SetupMove();
         }
     }
-     
+
     public void SetupMove()
     {
         if (_currentCoroutine != null)
@@ -52,9 +58,11 @@ public class UnitMovement : MonoBehaviour
     private void MoveTo(Transform target)
     {
         var step = _speed * Time.deltaTime;
+        _unit.TurnAnimator();
 
         if (IsTargetReached(target) == false)
         {
+            IsWalk = true;
             Vector3 direction = (target.position - transform.position).normalized;
 
             transform.rotation = Quaternion.Slerp(transform.rotation, target.rotation, step);
@@ -62,8 +70,15 @@ public class UnitMovement : MonoBehaviour
 
             transform.position = Vector3.MoveTowards(transform.position, target.position, step);
         }
+        else if (_unit.Flag != null && target == _unit.Flag.transform)
+        {
+            IsWalk = false;
+            _unit.CreateBase();
+            _unit.SetIsFree();
+        }
         else if (target == _unit.Storage)
         {
+            IsWalk = false;
             _unit.ContactStorage();
             _currentTarget = null;
             _unit.SetIsFree();

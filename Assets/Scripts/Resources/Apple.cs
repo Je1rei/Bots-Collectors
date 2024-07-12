@@ -1,1 +1,1 @@
-﻿public class Apple : Resource<Apple> { }
+﻿public class Apple : Resource<Apple> {}

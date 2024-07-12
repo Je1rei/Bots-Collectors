@@ -20,7 +20,7 @@ public class Spawner<T> : MonoBehaviour where T : MonoBehaviour
         return _spawnPoints[UnityEngine.Random.Range(0, _spawnPoints.GetLength(0))];
     }
 
-    protected virtual void Awake() 
+    protected virtual void Awake()
     {
         _pool = new ObjectPool<T>(
         createFunc: () => Instantiate(_prefab),
@@ -38,9 +38,26 @@ public class Spawner<T> : MonoBehaviour where T : MonoBehaviour
             _pool.Get();
     }
 
+    public virtual void GetObject(T obj)
+    {
+        _pool.Get(out obj);
+    }
+
     public void ReleasePool(T obj)
     {
         _pool.Release(obj);
+    }
+
+    public void TakeObject(T obj)
+    {
+        obj.transform.position = RandomizeSpawnPoint().position;
+
+        if (obj.GetComponent<Rigidbody>() != null)
+            obj.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+        obj.gameObject.SetActive(true);
+
+        Spawned?.Invoke(obj);
     }
 
     private void ReturnObject(T obj)
@@ -54,14 +71,5 @@ public class Spawner<T> : MonoBehaviour where T : MonoBehaviour
     protected virtual void Destroy()
     {
         Destroy(gameObject);
-    }
-
-    protected void TakeObject(T obj)
-    {
-        obj.transform.position = RandomizeSpawnPoint().position;
-        obj.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        obj.gameObject.SetActive(true);
-
-        Spawned?.Invoke(obj);
     }
 }

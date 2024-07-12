@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 public class ObjectPicker : MonoBehaviour
 {
@@ -13,13 +14,20 @@ public class ObjectPicker : MonoBehaviour
 
     public event Action PickedUp;
 
+    public Apple Apple { get; private set; }
+
     private void OnTriggerEnter(Collider unit)
     {
-        if (unit.TryGetComponent(out PickingObject pickingObject))
+        if (unit != null)
         {
-            PickUp(pickingObject);
+            if (unit.TryGetComponent(out PickingObject pickingObject) && pickingObject.gameObject == Apple.gameObject)
+            {
+                PickUp(pickingObject);
+            }
         }
     }
+
+    public void SetApple(Apple apple) => Apple = apple;
 
     public void PickUp(PickingObject pickingObject)
     {

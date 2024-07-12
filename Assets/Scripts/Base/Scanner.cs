@@ -44,4 +44,13 @@ public class Scanner : MonoBehaviour
             yield return waitTime;
         }
     }
+
+    void OnDrawGizmos()
+    {
+        // Устанавливаем цвет для Gizmos
+        Gizmos.color = Color.red;
+
+        // Отрисовываем сферу
+        Gizmos.DrawWireSphere(transform.position, _radius);
+    }
 }
