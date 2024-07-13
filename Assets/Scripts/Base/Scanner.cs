@@ -45,12 +45,10 @@ public class Scanner : MonoBehaviour
         }
     }
 
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
-        // Устанавливаем цвет для Gizmos
         Gizmos.color = Color.red;
 
-        // Отрисовываем сферу
         Gizmos.DrawWireSphere(transform.position, _radius);
     }
 }

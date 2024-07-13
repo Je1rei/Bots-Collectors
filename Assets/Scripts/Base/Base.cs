@@ -13,6 +13,10 @@ public class Base : MonoBehaviour
     [SerializeField] private FlagHandler _flagHandler;
     [SerializeField] private List<Unit> _units = new List<Unit>();
 
+    [SerializeField] private int _minCountUnitsCreateNewBase = 1;
+    [SerializeField] private int _priceCreateBase = 5;
+    [SerializeField] private int _priceCreateUnit = 3;
+
     private Flag _flag;
 
     private Queue<Apple> _freeScannedResources = new Queue<Apple>();
@@ -58,21 +62,17 @@ public class Base : MonoBehaviour
 
     private void ProcessGiveOrders(int countValue)
     {
-        int minCountUnitsCreateNewBase = 1;
-        int priceCreateBase = 5;
-        int priceCreateUnit = 3;
-
         Unit newUnit = null;
 
         foreach (Unit unit in _units)
         {
             if (unit.IsFree)
             {
-                if (HasFlag && _units.Count > minCountUnitsCreateNewBase)
+                if (HasFlag && _units.Count > _minCountUnitsCreateNewBase)
                 {
-                    if (_storage.CountResources >= priceCreateBase)
+                    if (_storage.CountResources >= _priceCreateBase)
                     {
-                        _storage.DecreaseResource(priceCreateBase);
+                        _storage.DecreaseResource(_priceCreateBase);
                         unit.MoveToTarget(_flag);
                         _flag = null;
                         HasFlag = false;
@@ -80,9 +80,9 @@ public class Base : MonoBehaviour
                         return;
                     }
                 }
-                else if (_storage.CountResources >= priceCreateUnit)
+                else if (_storage.CountResources >= _priceCreateUnit)
                 {
-                    _storage.DecreaseResource(priceCreateUnit);
+                    _storage.DecreaseResource(_priceCreateUnit);
                     newUnit = _spawnerUnits.Create();
                 }
 

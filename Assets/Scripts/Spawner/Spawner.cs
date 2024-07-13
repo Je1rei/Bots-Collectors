@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Pool;
 
+[RequireComponent(typeof(Rigidbody))]
 public class Spawner<T> : MonoBehaviour where T : MonoBehaviour
 {
     [SerializeField] private T _prefab;
@@ -46,9 +47,7 @@ public class Spawner<T> : MonoBehaviour where T : MonoBehaviour
     public void TakeObject(T obj)
     {
         obj.transform.position = RandomizeSpawnPoint().position;
-
-        if (obj.GetComponent<Rigidbody>() != null)
-            obj.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        obj.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
         obj.gameObject.SetActive(true);
 
